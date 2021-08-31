@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { LogsModule } from './logs/logs.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: 'log-api',
       autoLoadEntities: true,
       synchronize: true,
-    })
+    }),
+    LogsModule
   ],
 })
 export class AppModule {}
