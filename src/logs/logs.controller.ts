@@ -1,6 +1,8 @@
-import { Body, Controller, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, ForbiddenException, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 import { LogsService } from './logs.service';
 
 @Controller('logs')
@@ -10,8 +12,13 @@ export class LogsController {
 
 	@Post()
 	@UseInterceptors(FileInterceptor('file'))
-	uploadLog(@UploadedFile() file): Promise<void> {
-		console.log(file);
-		return this.logsService.uploadLog(file);
+	uploadLog(
+		@UploadedFile() file,
+		@GetUser() user: User,
+	): Promise<void> {
+		if(!file) {
+			throw new ForbiddenException("No file was given to the server");
+		}
+		return this.logsService.uploadLog(file, user);
 	}
 }

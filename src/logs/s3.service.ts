@@ -9,24 +9,23 @@ export class S3Service {
 		secretAccessKey: "lCqyqHOvlM25qVbDYP2GPQ94qo4gqH7/QCtutgMn",
 	});
 
-	async uploadFile(file) {
+	async uploadFile(file): Promise<String> {
 		const { originalname } = file;
-		await this.s3Upload(file.buffer, this.AWS_S3_BUCKET, originalname, file.mimetype);
+		return await this.s3Upload(file.buffer, this.AWS_S3_BUCKET, originalname, file.mimetype);
 	}
 
-	async s3Upload(file, bucket, name, mimetype) {
+	async s3Upload(file, bucket, name, mimetype): Promise<String> {
 		const params = {
 			Bucket: bucket,
-			Key: String(name),
+			Key: 'logs/'+`${name}_${Date.now().toString()}`,
 			Body: file,
 			ACL: "public-read",
 			ContentType: mimetype,
-			ContentDisposition: "inline",
 		};
 
 		try{
 			let s3Response = await this.s3.upload(params).promise();
-			return s3Response;
+			return s3Response.Location;
 		} catch(error) {
 			console.log(error);
 			throw new InternalServerErrorException();
