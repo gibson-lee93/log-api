@@ -1,15 +1,21 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import * as AWS from "aws-sdk";
 
 @Injectable()
 export class S3Service {
-	AWS_S3_BUCKET = "api-log-1";
+	constructor(
+		private configService: ConfigService
+	) {}
+	
+	AWS_S3_BUCKET = this.configService.get('AWS_S3_BUCKET');
 	s3 = new AWS.S3({
-		accessKeyId: "AKIASOXZIQNSGSVDRLFO",
-		secretAccessKey: "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",
+		accessKeyId: this.configService.get('ACCESS_KEY_ID'),
+		secretAccessKey: this.configService.get('SECRET_ACCESS_KEY'),
 	});
 
 	async uploadFile(file): Promise<String> {
+		console.log(this.AWS_S3_BUCKET);
 		const { originalname } = file;
 		return await this.s3Upload(file.buffer, this.AWS_S3_BUCKET, originalname, file.mimetype);
 	}
