@@ -18,6 +18,6 @@ export class LogsService {
 			throw new InternalServerErrorException();
 		}
 
-		return await this.logsRepository.saveLogToDB(url, user.email, user.id);
+		return await this.logsRepository.saveLogToDB(url, user.username, user.id);
 	}
 }
