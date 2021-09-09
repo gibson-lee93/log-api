@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/auth/user.entity';
+import { auth_user } from 'src/auth/user.entity';
 import { LogsRepository } from './logs.repository';
 import { S3Service } from './s3.service';
 
@@ -12,7 +12,7 @@ export class LogsService {
 		private s3Service: S3Service,
 	) {}
 
-	async uploadLog(file, user: User): Promise<void> {
+	async uploadLog(file, user: auth_user): Promise<void> {
 		let url = await this.s3Service.uploadFile(file);
 		if(!url) {
 			throw new InternalServerErrorException();

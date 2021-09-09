@@ -1,5 +1,5 @@
 import { type } from "os";
-import { User } from "src/auth/user.entity";
+import { auth_user } from "src/auth/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -16,6 +16,6 @@ export class Logs {
 	@Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
 	create_time: Date;
 
-	@ManyToOne(_type => User, user => user.logs, { eager: false })
-	user_id: User;
+	@ManyToOne(_type => auth_user, user => user.logs, { eager: false })
+	user_id: auth_user;
 }
