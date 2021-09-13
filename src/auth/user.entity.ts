@@ -25,7 +25,7 @@ export class auth_user {
 	@Column({ type: "tinyint", width: 1, default: () => 0 })
 	is_admin: number;
 
-	@Column({ type: "datetime" }) //when signUp, add '0000-00-00 00:00:00' as default value
+	@Column({ type: "datetime", nullable: true })
 	last_login: Date;
 
 	@Column({ type: "varchar", length: 255, default: () => "''" })
