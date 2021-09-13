@@ -3,7 +3,7 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LogsModule } from './logs/logs.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { config } from 'rxjs';
+import { TemplateModule } from './template/template.module';
 
 @Module({
   imports: [
@@ -25,7 +25,8 @@ import { config } from 'rxjs';
         database: configService.get('DB_DATABASE'),
       }),
     }),
-    LogsModule
+    LogsModule,
+    TemplateModule,
   ],
 })
 export class AppModule {}

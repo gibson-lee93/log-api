@@ -5,6 +5,7 @@ import { UserRepository } from './user.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
+import { TemplateService } from '../template/template.service';
 
 @Injectable()
 export class AuthService {
@@ -12,10 +13,12 @@ export class AuthService {
 		@InjectRepository(UserRepository)
 		private userRepository: UserRepository,
 		private jwtService: JwtService,
+		private templateService: TemplateService
 	) {}
 
 	async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-		await this.userRepository.createUser(authCredentialsDto);
+		const user = await this.userRepository.createUser(authCredentialsDto);
+		await this.templateService.sendMailForSignup(user.id, user.username, 'signup', 'ko');
 	}
 
 	async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
