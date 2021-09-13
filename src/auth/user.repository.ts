@@ -1,7 +1,11 @@
+import { 
+	ConflictException, 
+	InternalServerErrorException, 
+	NotFoundException,
+} from "@nestjs/common";
 import { EntityRepository, Repository } from "typeorm";
 import { auth_user } from "./user.entity";
 import { AuthCredentialsDto } from "./dto/auth-credentials.dto";
-import { ConflictException, InternalServerErrorException } from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 
 @EntityRepository(auth_user)
@@ -34,6 +38,24 @@ export class UserRepository extends Repository<auth_user> {
 				console.log(error);
 				throw new InternalServerErrorException();
 			}
+		}
+	}
+
+	async validateEmail(query: string): Promise<string> {
+		const userId = Number(query.slice(0, 1));
+		
+		const user = await this.findOne({ id: userId });
+		if(!user) {
+			throw new NotFoundException('User not found');
+		}
+
+		user.is_verified = 1;
+		try {
+			await this.save(user);
+			return 'Validation Successful';
+		} catch(error) {
+			console.log(error);
+			throw new InternalServerErrorException();
 		}
 	}
 }
