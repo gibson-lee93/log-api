@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
 import { TemplateService } from '../template/template.service';
+import { auth_user } from './user.entity';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,48 @@ export class AuthService {
 		private jwtService: JwtService,
 		private templateService: TemplateService
 	) {}
+
+	async getUser(user: auth_user) {
+		delete user.id;
+		delete user.password;
+		delete user.logs;
+		delete user.is_admin;
+		delete user.is_deleted;
+		delete user.is_verified;
+		delete user.last_login;
+		delete user.fcm_token;
+		delete user.login_fail;
+		delete user.language;
+		delete user.client;
+		delete user.version_name;
+		delete user.remark;
+		delete user.role;
+		delete user.time_zone;
+
+		let interests = [];
+		let benefits = [];
+
+		if (user.interests) {
+			interests = user.interests.split(',').map((data) => {
+				return { code: data }
+			})
+			delete user.interests;
+		}
+
+    if (user.benefits) {
+      benefits = user.benefits.split(',').map((data) => {
+        return { code: data }
+      })
+			delete user.benefits;
+    }
+		
+		return {"auth_profile_get_result": {
+			...user,
+			"interests": interests,
+			"benefits": benefits
+			}
+		};
+	}
 
 	async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
 		const user = await this.userRepository.createUser(authCredentialsDto);
