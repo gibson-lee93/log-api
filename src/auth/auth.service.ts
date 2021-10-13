@@ -18,21 +18,13 @@ export class AuthService {
 	) {}
 
 	async getUser(user: auth_user) {
-		delete user.id;
 		delete user.password;
-		delete user.logs;
 		delete user.is_admin;
 		delete user.is_deleted;
 		delete user.is_verified;
 		delete user.last_login;
 		delete user.fcm_token;
 		delete user.login_fail;
-		delete user.language;
-		delete user.client;
-		delete user.version_name;
-		delete user.remark;
-		delete user.role;
-		delete user.time_zone;
 
 		let interests = [];
 		let benefits = [];
